@@ -1,20 +1,13 @@
-"""
+'''
 Criação da estrutura de dados para montagem do menu.
 Estrutura baseada em árvore de dados, onde cada nó é um item ou subitem de menu.
 Os nós folha são responsáveis por executar alguma função do software.
 Sempre que uma função é executada e retorna 0 é entendido como nó não folha.
 Sempre que uma função é executada e retorna 1 é entendido como nó folha.
-"""
+'''
 from time import sleep
+from funcoes_apoio import clear
 from menu_funcoes import (cliente,
-                          pedido,
-                          insumo,
-                          cardapio,
-                          produto,
-                          produto_insumo,
-                          pedido_cardapio,
-
-                          clear,
 
                           adicionar_cliente,
                           gerenciar_clientes,
@@ -36,7 +29,7 @@ from menu_funcoes import (cliente,
                           listar_produtos)
 
 class NoMenu:
-    """
+    '''
     Classe NoMenu define a estrutura de um nó da árvore de menu.
     Cada objeto do tipo nó (NoMenu) é composto do seguinte:
     ATRIBUTOS:
@@ -62,7 +55,7 @@ class NoMenu:
     - dictionary: self.executar() - Método que executa a função cadastrada no 
                                     nó, caso exista, e retorna um dicionário 
                                     com todos os filhos do nó atual.
-    """
+    '''
     def __init__(self, descricao, funcao=None):
         self.descricao = descricao
         self.funcao = funcao
@@ -70,22 +63,22 @@ class NoMenu:
         self.pai = None
 
     def adicionar_filho(self, opcao, no_filho):
-        """Adiciona nó filho no dicionário filhos"""
+        '''Adiciona nó filho no dicionário filhos'''
         no_filho.pai = self
         self.filhos[opcao] = no_filho
 
     def executar(self):
-        """
+        '''
         Executa a função associada ao nó, se houver.
         Retorna um dicionário de filhos.
-        """
+        '''
         if self.funcao:
             if self.funcao() == 1:
                 sleep(1)
         return self.filhos
 
 class ArvoreMenu:
-    """
+    '''
     Classe ArvoreMenu define a estrutura de um árvore de menu com nó raiz e
     controla qual o nó atual na navegação do usuário.
     O sistema possuirá apenas um objeto do tipo árvore (ArvoreMenu), que é 
@@ -100,16 +93,16 @@ class ArvoreMenu:
     - None: self.navegar()  - Loop infinito de apresentação do menu.
                               Controla a lógica de funcionamento dos menus
                               e sua estratégia de desligamento do software.
-    """
+    '''
     def __init__(self, raiz):
         self.raiz = raiz
         self.no_atual = raiz
 
     def navegar(self):
-        """
+        '''
         Método de criação e controle do menu e estratégia 
         de desligamento do software
-        """
+        '''
         while True:
             clear()
             filhos = self.no_atual.executar()
@@ -135,27 +128,20 @@ class ArvoreMenu:
             elif escolha == '0':
                 if self.no_atual == self.raiz:
                     print("Saindo...")
-                    cliente.close()
-                    pedido.close()
-                    cardapio.close()
-                    insumo.close()
-                    produto.close()
-                    produto_insumo.close()
-                    pedido_cardapio.close()
+                    cliente.lanchonete_db.close()
                     break
-                else:
-                    print("Retornando ao menu anterior...")
-                    sleep(1)
-                    self.no_atual = self.no_atual.pai
+                print("Retornando ao menu anterior...")
+                sleep(1)
+                self.no_atual = self.no_atual.pai
 
             else:
                 print("Opção inválida.")
 
 # Estrutura da árvore de menus apenas para testes. Não atualizar!
 def main():
-    """
+    '''
     Estrutura da árvore de menus apenas para testes. Não atualizar!
-    """
+    '''
     raiz = NoMenu("Menu Principal")
 
     no_cliente = NoMenu("Gerenciar Clientes", gerenciar_clientes)
